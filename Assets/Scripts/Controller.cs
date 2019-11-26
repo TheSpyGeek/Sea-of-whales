@@ -22,16 +22,34 @@ public class Controller : MonoBehaviour
     // Update is called once per frame
     void Update(){
 
+        moveWhale();
+
+
+    }
+
+
+
+    void moveWhale() {
         Vector2 pos = new Vector2(transform.position.x, transform.position.z);
 
         Vector2 direction = goTo - pos;
 
         if(direction.sqrMagnitude > 0.6f) {
 
-            Vector3 newPos = transform.position + new Vector3(direction.x, 0, direction.y) * speed * Time.deltaTime;
+            float angle = Vector2.Dot(direction.normalized, new Vector2(transform.forward.x, transform.forward.z).normalized);
+
+            Debug.Log(angle);
+
+            Quaternion qua = new Quaternion();
+            qua.eulerAngles = new Vector3(0, angle, 0);
+
+            transform.rotation = qua;
+
+            Vector3 newPos = transform.position + transform.forward * speed * Time.deltaTime;
             
-            Debug.Log(direction);
-            _rigid.MovePosition(newPos);
+
+
+            //_rigid.MovePosition(newPos);
         }
     }
 
