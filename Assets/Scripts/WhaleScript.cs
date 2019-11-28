@@ -10,14 +10,26 @@ public class WhaleScript : MonoBehaviour {
     public int timeDilataion = 1000;
     public GameObject worldObject;
 
+    public int baseDisbandTime = 50;
+    private int disbandTime;
+
+
+    public double probaMigration = 0.80;
+    private bool migre = false;
+    private bool decided = false;
+    private bool pregnent = false;
+    private bool recentMother = false;
+
 
     private int id;
     private bool sex;
     public int maxLifeExperence = 50;
     public int minLifeExperence = 20;
     private int lifeExperence;
-    private int life;
+    private int age;
+    private int ageInTics;
 
+    private string currentSuperState = "SuperStateIDLE";
     private string currentState = "StateIDLE";
 
     public float spead = 0.7f;
@@ -26,7 +38,7 @@ public class WhaleScript : MonoBehaviour {
     private int countdownToRotate;
 
     public double distanceRapprochement = 10.0;
-    public double neighborsRadar = 200.0;
+    public double neighborsRadar = 600.0;
     public int baseCountdowToRefreshRadar = 50;
     private int countdowToRefreshRadar;
     private List<GameObject> neighborsList = new List<GameObject>();
@@ -39,12 +51,16 @@ public class WhaleScript : MonoBehaviour {
         worldObject = GameObject.Find("World");
         transform.Rotate(new Vector3(90, 0, 0));
 
+        disbandTime = Random.Range(0, baseDisbandTime);
+
 
         if (Random.Range(0, 1) == 0) { sex = false; }
         else { sex = true; }
 
+
         lifeExperence = Random.Range(minLifeExperence, maxLifeExperence);
-        life = Random.Range(5, lifeExperence);
+        age = Random.Range(5, lifeExperence);
+        ageInTics = age * timeDilataion;
 
         countdownToRotate = baseCountdowToRotate;
         countdowToRefreshRadar = baseCountdowToRefreshRadar;
@@ -53,30 +69,35 @@ public class WhaleScript : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        if (ageInTics < 0) {
+            Destroy(this.gameObject);
+        }
+        ageInTics -= 1;
+        age = ageInTics / timeDilataion;
 
-        switch (currentState) {
 
-            case "StateIDLE":
-                print("StateIDLE \n");
-                StateIDLE();
+        switch (currentSuperState) {
+
+            case "SuperStateIDLE":
+                SuperStateIDLE();
                 break;
 
-            case "StateRegroupementCall":
-                print("StateRegroupementCall \n");
-                StateRegroupementCall();
+            case "SuperStateMigration":
+                SuperStateMigration();
                 break;
 
-            case "StateRegroupement":
-                print("StateRegroupement \n");
-                StateRegroupement();
+            case "SuperStateReproduction":
+                SuperStateReproduction();
                 break;
 
-            case "StateVoyage":
-                StateVoyage();
+            case "SuperStateMigrationBack":
+                SuperStateMigrationBack();
                 break;
 
-            default :
-                StateIDLE();
+            default:
+                SuperStateIDLE();
+                currentSuperState = "SuperStateIDLE";
+                currentState = "StateIDLE";
                 break;
         }
 
@@ -85,30 +106,140 @@ public class WhaleScript : MonoBehaviour {
     /* --------------------------- // FSM \\ ---------------------------  */
 
 
+    void Reflex() {
+
+    }
+
+
+    void SuperStateIDLE() { // Quand on est en zone de repos 
+
+        Wiggle(); // + Nage vers / dans la zone repos 
+
+        if (!decided && worldObject.GetComponent<WorldScript>().season && InReposZone()) {
+
+            decided = true;
+
+            if (migrationDecision()) {
+                currentSuperState = "SuperStateMigration";
+                currentState = "StateRegroupement";
+            }
+        }
+
+        if (decided && !worldObject.GetComponent<WorldScript>().season) {
+            decided = false;
+        }
+
+    }
+
+    void SuperStateMigration() { 
+        switch (currentState) {
+
+            case "StateRegroupement":
+                StateRegroupement();
+                break;
+
+            case "StateTrip":
+                StateTrip(); 
+                break;
+
+            case "StateDisband":
+                StateDisband();
+                break;
+
+            default:
+                print("erreur SpuperStateMigration Default Statement");
+                break;
+
+        }
+
+    }
+
+    void SuperStateReproduction() { // Quand on est en zone de reproduction 
+        switch (currentState) {
+
+            case "StateRegroupement":
+                StateRegroupementSex();
+                break;
+
+            case "StateSexParty":
+                StateSexParty();
+                break;
+        }
+
+    }
+
+
+    void SuperStateMigrationBack() { // Chemin retour
+        switch (currentState)
+        {
+
+            case "StateRegroupement":
+                StateRegroupement();
+                break;
+
+            case "StateTripBack":
+                StateTripBack();
+                break;
+
+            case "StateDisband":
+                StateDisband();
+                break;
+
+            default:
+                print("erreur SpuperStateMigrationBack Default Statement");
+                break;
+
+        }
+
+    }
+
+
     void StateIDLE() {
         Wiggle();
-        if (Input.GetKey(KeyCode.A)) {
-            currentState = "StateRegroupementCall";
-        }
     }
 
-    void StateRegroupementCall() {
-        FindMyNeighborsOnce();
-        if (neighborsList.Count != 0) {
-            currentState = "StateRegroupement";
-        }
-        else {
-            currentState = "StateIDLE";
-        }
-    }
+    // SUPERSTATE : MIGRATION
 
     void StateRegroupement() {
-        if (GoTo(FindMyNearestNeighbor())) { } // il maque du code here ^ê
-        else currentState = "StateIDLE";
+        if (worldObject.GetComponent<WorldScript>().inRegroupement) {
+            // GoTo(); worldObject.meetingPointRepos
+        }
+        else {
+            // Face ZoneReproduction
+            currentState = "StateTrip";
+        }
     }
 
+    void StateTrip() {
+        if (!InReproductionZone()) {
+            //Avancer
+        }
+        else {
+            currentState = "StateDisband";
+        }
+    }
 
-    void StateVoyage() {
+    void StateDisband() {
+        if (disbandTime < 0) {
+            disbandTime = Random.Range(0, baseDisbandTime);
+        }
+        else currentState = "StateIDLE";
+        disbandTime -= 1;
+    }
+
+    // SUPERSTATE : REPRODUCTION
+
+    void StateRegroupementSex() {
+
+    }
+
+    void StateSexParty() {
+
+    }
+
+    // SUPERSATE : MIGRATIONBACK
+
+    void StateTripBack() {
 
     }
 
@@ -174,7 +305,7 @@ public class WhaleScript : MonoBehaviour {
     }
 
 
-    void Wiggle() {
+    void Wiggle() { // 
         if (countdownToRotate < 0)
         {
             countdownToRotate = baseCountdowToRotate;
@@ -185,7 +316,16 @@ public class WhaleScript : MonoBehaviour {
         transform.Translate(new Vector3(0, spead, 0) * Time.deltaTime);
     }
 
+    bool InReposZone() {
+        if (transform.position.x > 700 && transform.position.x < 1000 && transform.position.z > 400 && transform.position.z < 1000) return true; 
+        return false;
+    }
 
+    bool InReproductionZone()
+    {
+        if (transform.position.x > 0 && transform.position.x < 200 && transform.position.z > 0 && transform.position.z < 300) return true;
+        return false;
+    }
 
 
 
@@ -201,9 +341,17 @@ public class WhaleScript : MonoBehaviour {
         return Math.Sqrt(Math.Pow(go.transform.position.x - transform.position.x, 2) + Math.Pow(go.transform.position.y - transform.position.y, 2) + Math.Pow(go.transform.position.z - transform.position.z, 2));
     }
 
+
+    bool migrationDecision() {
+        int dice = (int)Random.Range(0, (float)(100 * probaMigration));
+        if (dice <= 100 * probaMigration) return true;
+        return false;
+    }
 }
 
 
+
+    
 
 
     
