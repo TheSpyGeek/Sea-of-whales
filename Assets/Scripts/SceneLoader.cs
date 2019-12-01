@@ -1,17 +1,27 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
-    public string scene;
 
 
-    public void LoadSceneMode() {
-        SceneManager.LoadScene(scene);
+
+    public void LoadScene(int indexScene) {
+        StartCoroutine(LoadSceneAsync(indexScene));
     }
 
+
+    IEnumerator LoadSceneAsync(int indexScene) {
+        AsyncOperation operation = SceneManager.LoadSceneAsync(indexScene);
+
+        while(!operation.isDone) {
+
+            yield return null;
+        }
+
+    }
+    
 
 }
