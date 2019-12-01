@@ -20,13 +20,14 @@ public class AIController : MonoBehaviour
     void Update()
     {
         if(Input.GetMouseButtonDown(0)) {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
+            if(!PauseMenu.gamePaused) {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
 
-            if(Physics.Raycast(ray, out hit, 100, whatcanBeClickedOn)) {
-                agent.SetDestination(hit.point);
+                if(Physics.Raycast(ray, out hit, 100, whatcanBeClickedOn)) {
+                    agent.SetDestination(hit.point);
+                }
             }
-
         }
         
     }
