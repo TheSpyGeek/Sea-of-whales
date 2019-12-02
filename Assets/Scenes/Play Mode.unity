@@ -603,5 +603,10 @@ PrefabInstance:
       propertyPath: BaseRegroupementTime
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 1904517775631058858, guid: 2cbfca9c1379542c7ad790e999fedc40,
+        type: 3}
+      propertyPath: updateDirectionOrca
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2cbfca9c1379542c7ad790e999fedc40, type: 3}

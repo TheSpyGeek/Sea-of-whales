@@ -30,6 +30,10 @@ public class WorldScript : MonoBehaviour
     private int regroupementTime;
     public bool inRegroupement = true;
 
+
+    public float updateDirectionOrca = 1;
+    private float lastUpdate;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -46,13 +50,11 @@ public class WorldScript : MonoBehaviour
         orcaGroupVector = new Vector3[nbOrcaGroup];
         
 
-    WhaleCreation();
-    OrcaCreation();
+        WhaleCreation();
+        OrcaCreation();
 
-        for (int i = 0; i < nbOrcaGroup; i++)
-        {
-            orcaGroupVector[i] = new Vector3(0, Random.Range(-maxOrcaAngleRotation, maxOrcaAngleRotation), 0);
-        }
+        computeVectorDirectionOrca();
+        lastUpdate = Time.time;
 
     }
 
@@ -103,20 +105,20 @@ public class WorldScript : MonoBehaviour
 
     void Update()
     {
-        print("Season : " + season + " Season duration : " + seasonDuration);
+        //print("Season : " + season + " Season duration : " + seasonDuration);
         if (seasonDuration < 0)
         {
             season = !season;
             seasonDuration = baseSeasonDuration;
             meetingPointRepos = new Vector3(Random.Range(minX, maxX), 5, Random.Range(minZ, maxZ));
             inRegroupement = true;
-            print("Season : " + season);
+            //print("Season : " + season);
         }
         seasonDuration -= 1;
 
         if (inRegroupement)
         {
-            print("Regroupement : " + regroupementTime);
+            //print("Regroupement : " + regroupementTime);
             regroupementTime -= 1;
             if (regroupementTime < 0)
             {
@@ -125,11 +127,24 @@ public class WorldScript : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < nbOrcaGroup; i++)
+
+
+        if(lastUpdate + updateDirectionOrca < Time.time)
         {
-            orcaGroupVector[i] = new Vector3(0, Random.Range(-maxOrcaAngleRotation, maxOrcaAngleRotation), 0);
+            computeVectorDirectionOrca();
+            lastUpdate = Time.time;
         }
 
 
+
+    }
+
+
+    void computeVectorDirectionOrca()
+    {
+        for (int i = 0; i < nbOrcaGroup; i++)
+        {
+            orcaGroupVector[i] = new Vector3(Random.Range(0, 1000), 0, Random.Range(0, 1000));
+        }
     }
 }
