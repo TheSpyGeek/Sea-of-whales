@@ -32,7 +32,9 @@ public class WhaleScript : MonoBehaviour
     private int age;
     private int ageInTics;
 
+    [SerializeField]
     private string currentSuperState = "SuperStateIDLE";
+    [SerializeField]
     private string currentState = "StateIDLE";
 
     public float spead = 0.7f;
@@ -65,8 +67,10 @@ public class WhaleScript : MonoBehaviour
         disbandTime = Random.Range(0, baseDisbandTime);
 
 
-        if (Random.Range(0, 1) == 0) { sex = false; }
-        else { sex = true; }
+        agent.nextPosition = transform.position;
+
+        if (Random.Range(0, 100) > 60) { sex = true; }
+        else { sex = false; }
 
 
         lifeExperence = Random.Range(minLifeExperence, maxLifeExperence);
@@ -84,6 +88,11 @@ public class WhaleScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(ageInTics < 50 && MyMom == null)
+        {
+            Destroy(this.gameObject);
+        }
+
         if (ageInTics < 0)
         {
             Destroy(this.gameObject);
@@ -91,7 +100,8 @@ public class WhaleScript : MonoBehaviour
         ageInTics -= 1;
         age = ageInTics / timeDilataion;
 
-        FindMyNeighbors();
+
+        FindMyNeighborsOnce();
 
         Wiggle();
 
@@ -146,9 +156,14 @@ public class WhaleScript : MonoBehaviour
             currentSuperState = "SuperStateIDLE";
             currentState = "StateIDLE";
         }
+        else if (worldObject.GetComponent<WorldScript>().season)
+        {
+
+        }
         else
         {
-            FollowMom(MyMom);
+            //FollowMom(MyMom);
+            Wiggle();
         }
 
 
@@ -180,7 +195,7 @@ public class WhaleScript : MonoBehaviour
 
         if (sex == false)
         {
-            if (Random.Range(0, 1) == 0) { pregnent = false; }
+            if (Random.Range(0, 100) > 50) { pregnent = false; }
             else { pregnent = true; }
 
         }
@@ -293,10 +308,13 @@ public class WhaleScript : MonoBehaviour
                 if (pregnent) {
                     pregnent = false;
                     Vector3 offset = new Vector3(10, 0, 10);
-                    var obj = (GameObject)Instantiate(WhaleObject, transform.position +offset, Quaternion.identity);
+                    var obj = (GameObject)Instantiate(WhaleObject, transform.position + offset, Quaternion.identity);
                     obj.GetComponent<WhaleScript>().MyMom = this.gameObject;
-                    obj.GetComponent<WhaleScript>().currentSuperState = "SuperStateBaby";
-                    Debug.Log("Naissance");
+                    obj.GetComponent<WhaleScript>().currentSuperState = currentSuperState;
+                    obj.GetComponent<WhaleScript>().currentState = currentState;
+                    obj.GetComponent<WhaleScript>().age = Random.Range(maxLifeExperence, maxLifeExperence + 20);
+                    obj.GetComponent<NavMeshAgent>().nextPosition = transform.position + offset;
+                    Debug.LogWarning("Naissance");
                 }
 
             }
@@ -438,6 +456,10 @@ public class WhaleScript : MonoBehaviour
     }
 
     void FollowMom(GameObject mom) {
+        if(mom == null)
+        {
+            Destroy(this.gameObject);
+        }
         transform.rotation = mom.transform.rotation;
         transform.Translate(new Vector3(0, 0, spead) * Time.deltaTime);
     }

@@ -17,6 +17,6 @@ public class countOrca : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        text.text = "Nombre orca : " + GameObject.FindGameObjectsWithTag("OrcaTAG").Length;
+        text.text = "Nombre orques : " + GameObject.FindGameObjectsWithTag("OrcaTAG").Length;
     }
 }

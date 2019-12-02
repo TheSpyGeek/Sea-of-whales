@@ -105,7 +105,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 6.2
-  m_Speed: 15
+  m_Speed: 20
   m_Acceleration: 8
   avoidancePriority: 79
   m_AngularSpeed: 120
@@ -132,14 +132,19 @@ MonoBehaviour:
   timeDilataion: 1000
   worldObject: {fileID: 3253624291601907003, guid: 2cbfca9c1379542c7ad790e999fedc40,
     type: 3}
+  WhaleObject: {fileID: 4905690066768675324}
   baseDisbandTime: 50
   probaMigration: 0.8
+  pregnent: 0
   sex: 0
   maxLifeExperence: 50
   minLifeExperence: 20
   spead: 12
   maxAngleRotation: 30
   baseCountdowToRotate: 1000
+  zoneGoto: 60
   distanceRapprochement: 10
   neighborsRadar: 600
   baseCountdowToRefreshRadar: 50
+  MyMom: {fileID: 0}
+  baby: {fileID: 0}
