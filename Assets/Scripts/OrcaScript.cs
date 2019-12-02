@@ -102,7 +102,6 @@ public class OrcaScript : MonoBehaviour {
                     if (o.GetComponent<OrcaScript>().groupeID == groupeID)
                     {
                         o.GetComponent<OrcaScript>().currentState = "StateHunt";
-                        print("HUNT");
                     }
 
                 }
@@ -137,7 +136,6 @@ public class OrcaScript : MonoBehaviour {
             double distance = Math.Sqrt(Math.Pow(w.transform.position.x - transform.position.x, 2) + Math.Pow(w.transform.position.y - transform.position.y, 2) + Math.Pow(w.transform.position.z - transform.position.z, 2));
             if(distance < maxDetectionWhale &&  w.GetComponent<WhaleScript>().GetNeighbors(lonelinessWhaleDistance)) {
                 target = w;
-                Debug.Log("BEGIN HUNT");
 
                 return true;
             }

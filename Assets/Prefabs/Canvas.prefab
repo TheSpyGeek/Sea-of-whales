@@ -50,8 +50,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71e83382446e793429dce2a7366e96da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  active: {fileID: 0}
-  notactive: {fileID: 0}
+  active: {fileID: 1022111172}
+  notactive: {fileID: 1684516539}
   world: {fileID: 0}
 --- !u!1 &172337137
 GameObject:

@@ -123,8 +123,8 @@ MonoBehaviour:
     type: 3}
   prefabOrca: {fileID: 2330961069215897322, guid: e03b2e1275f6c3a4494d374a9fbddb4a,
     type: 3}
-  nbWhales: 100
-  nbOrcaGroup: 5
+  nbWhales: 150
+  nbOrcaGroup: 4
   minX: 700
   maxX: 1000
   minZ: 400
@@ -134,11 +134,12 @@ MonoBehaviour:
   orcaDispertionOffset: 10
   maxOrcaAngleRotation: 45
   season: 1
-  baseSeasonDuration: 1000
+  baseSeasonDuration: 2000
   meetingPointRepos: {x: 0, y: 0, z: 0}
   meetingPointReproduction: {x: 0, y: 0, z: 0}
-  BaseRegroupementTime: 300
+  BaseRegroupementTime: 100
   inRegroupement: 1
+  updateDirectionOrca: 20
 --- !u!114 &1904517775631058859
 MonoBehaviour:
   m_ObjectHideFlags: 0
