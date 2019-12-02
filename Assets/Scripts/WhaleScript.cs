@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using UnityEngine.AI;
 
 public class WhaleScript : MonoBehaviour
 {
@@ -45,11 +46,15 @@ public class WhaleScript : MonoBehaviour
     private List<GameObject> neighborsList = new List<GameObject>();
 
 
+    private NavMeshAgent agent;
+
+
 
 
     // Start is called before the first frame update
     void Start()
     {
+        agent = gameObject.GetComponent<NavMeshAgent>();
         worldObject = GameObject.Find("World");
 
         disbandTime = Random.Range(0, baseDisbandTime);
@@ -384,8 +389,11 @@ public class WhaleScript : MonoBehaviour
         double d = distanceEucToMe(meetingPoint);
         if (d > 30)
         {
-            transform.LookAt(meetingPoint);
-            transform.Translate(new Vector3(0, 0, spead) * Time.deltaTime);
+            NavMeshAgent agent = gameObject.GetComponent<NavMeshAgent>();
+            agent.SetDestination(meetingPoint);
+            /*transform.LookAt(meetingPoint);
+            transform.Translate(new Vector3(0, 0, spead) * Time.deltaTime);*/
+
         }
         else { Wiggle();  }
     }
@@ -407,22 +415,29 @@ public class WhaleScript : MonoBehaviour
     void RestInTheFuckingWorld() {
         if (transform.position.x < 0 || transform.position.x > 1000 || transform.position.z < 0 || transform.position.z > 1000)
         {
-            transform.Rotate(new Vector3(0, 90, 0));
+
+            Vector3 randomPos = new Vector3(Random.Range(0, 1000), 0, Random.Range(0, 1000));
+            agent.SetDestination(randomPos);
+
         }
+
+        //Vector3 randomPos = new Vector3(Random.Range(0, 1000), 0, Random.Range()
     }
 
     void RestInTheFuckingReposZone()
     {
         if (transform.position.x < 700 || transform.position.x > 1000 || transform.position.z < 400 || transform.position.z > 1000)
         {
-            transform.Rotate(new Vector3(0, 90, 0));
+            Vector3 randomPos = new Vector3(Random.Range(700, 1000), 0, Random.Range(400, 1000));
+            agent.SetDestination(randomPos);
         }
     }
 
     void RestInTheFuckingReproductionZone() {
         if (transform.position.x < 0 || transform.position.x > 200 || transform.position.z < 0 || transform.position.z > 300)
         {
-            transform.Rotate(new Vector3(0, 90, 0));
+            Vector3 randomPos = new Vector3(Random.Range(0, 200), 0, Random.Range(0, 300));
+            agent.SetDestination(randomPos);
         }
     }
 
