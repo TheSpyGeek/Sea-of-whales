@@ -103,7 +103,7 @@ public class OrcaScript : MonoBehaviour {
 
         }
         else countdownToRotate -= 1;
-        transform.Translate(new Vector3(0, 0, huntSpead) * Time.deltaTime);
+        transform.Translate(new Vector3(0, 0, huntSpead) * Time.deltaTime); 
 
 
         WrapAround();

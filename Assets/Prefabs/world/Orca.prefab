@@ -35,6 +35,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Orca
       objectReference: {fileID: 0}
+    - target: {fileID: 1935079166925728208, guid: e1ec3291104125847a024b701e47681e,
+        type: 3}
+      propertyPath: m_TagString
+      value: OrcaTAG
+      objectReference: {fileID: 0}
     - target: {fileID: 56249094485651579, guid: e1ec3291104125847a024b701e47681e,
         type: 3}
       propertyPath: m_LocalPosition.x
