@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,6 +9,13 @@ public class PauseMenu : MonoBehaviour
     public static bool gamePaused = false;
 
     public GameObject pauseMenuUI;
+
+    public Slider slider;
+
+    private void Start()
+    {
+        slider.value = Time.timeScale;
+    }
 
     // Update is called once per frame
     void Update() {
@@ -32,7 +40,7 @@ public class PauseMenu : MonoBehaviour
 
     public void Reprendre() {
         pauseMenuUI.SetActive(false);
-        Time.timeScale = 1f;
+        Time.timeScale = slider.value;
         gamePaused = false;
 
     }
@@ -50,6 +58,6 @@ public class PauseMenu : MonoBehaviour
         Scene scene = SceneManager.GetActiveScene();
         Debug.Log(scene.name);
         SceneManager.LoadScene(scene.buildIndex);
-        Time.timeScale = 1f;
+        Time.timeScale = slider.value;
     }
 }
