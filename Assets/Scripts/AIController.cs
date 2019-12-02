@@ -26,7 +26,6 @@ public class AIController : MonoBehaviour
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
 
-                Debug.Log(ray.direction);
                 if(Physics.Raycast(ray, out hit, 100, whatcanBeClickedOn)) {
                     agent.SetDestination(hit.point);
                 }
