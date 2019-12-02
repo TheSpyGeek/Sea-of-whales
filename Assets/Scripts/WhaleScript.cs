@@ -262,8 +262,7 @@ public class WhaleScript : MonoBehaviour
             }
             else
             {
-                transform.LookAt(FindLove().transform);
-                transform.Translate(new Vector3(0, 0, spead) * Time.deltaTime);
+                agent.SetDestination(FindLove().transform.position);
             }
         }
 
@@ -404,16 +403,16 @@ public class WhaleScript : MonoBehaviour
         if (countdownToRotate < 0)
         {
             countdownToRotate = baseCountdowToRotate;
-            transform.Rotate(new Vector3(0, Random.Range(-maxAngleRotation, maxAngleRotation), 0));
+            Vector3 randomPos = new Vector3(Random.Range(0, 1000), 0, Random.Range(0, 1000));
+            agent.SetDestination(randomPos);
         }
         else countdownToRotate -= 1;
 
-        transform.Translate(new Vector3(0, 0, spead) * Time.deltaTime);
         //RestInTheFuckingWorld();                                                                                    // Sortir (Wrap) ce code du wiggle et le metre dans le super etat 
     }
 
     void RestInTheFuckingWorld() {
-        if (transform.position.x < 0 || transform.position.x > 1000 || transform.position.z < 0 || transform.position.z > 1000)
+        if (InWorld())
         {
 
             Vector3 randomPos = new Vector3(Random.Range(0, 1000), 0, Random.Range(0, 1000));
@@ -426,7 +425,7 @@ public class WhaleScript : MonoBehaviour
 
     void RestInTheFuckingReposZone()
     {
-        if (transform.position.x < 700 || transform.position.x > 1000 || transform.position.z < 400 || transform.position.z > 1000)
+        if (InReposZone())
         {
             Vector3 randomPos = new Vector3(Random.Range(700, 1000), 0, Random.Range(400, 1000));
             agent.SetDestination(randomPos);
@@ -434,7 +433,7 @@ public class WhaleScript : MonoBehaviour
     }
 
     void RestInTheFuckingReproductionZone() {
-        if (transform.position.x < 0 || transform.position.x > 200 || transform.position.z < 0 || transform.position.z > 300)
+        if (InReproductionZone())
         {
             Vector3 randomPos = new Vector3(Random.Range(0, 200), 0, Random.Range(0, 300));
             agent.SetDestination(randomPos);
@@ -445,6 +444,11 @@ public class WhaleScript : MonoBehaviour
     {
         if (transform.position.x > 700 && transform.position.x < 1000 && transform.position.z > 400 && transform.position.z < 1000) return true;
         return false;
+    }
+
+    bool InWorld()
+    {
+        return transform.position.x < 0 || transform.position.x > 1000 || transform.position.z < 0 || transform.position.z > 1000;
     }
 
     bool InReproductionZone()
