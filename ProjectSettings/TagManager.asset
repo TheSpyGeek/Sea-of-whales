@@ -6,6 +6,9 @@ TagManager:
   tags:
   - ReposZoneTag
   - ReproductionZoneTag
+  - WhaleTAG
+  - OrcaTAG
+  - World
   layers:
   - Default
   - TransparentFX

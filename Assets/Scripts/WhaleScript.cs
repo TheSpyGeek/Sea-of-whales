@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class WhaleScript : MonoBehaviour {
+public class WhaleScript : MonoBehaviour
+{
 
     // A mettre dans la classe World :
     public int timeDilataion = 1000;
@@ -39,7 +40,7 @@ public class WhaleScript : MonoBehaviour {
 
     public double distanceRapprochement = 10.0;
     public double neighborsRadar = 600.0;
-    public int baseCountdowToRefreshRadar = 50;
+    public int baseCountdowToRefreshRadar = 100;
     private int countdowToRefreshRadar;
     private List<GameObject> neighborsList = new List<GameObject>();
 
@@ -47,9 +48,9 @@ public class WhaleScript : MonoBehaviour {
 
 
     // Start is called before the first frame update
-    void Start() {
+    void Start()
+    {
         worldObject = GameObject.Find("World");
-        transform.Rotate(new Vector3(90, 0, 0));
 
         disbandTime = Random.Range(0, baseDisbandTime);
 
@@ -63,20 +64,28 @@ public class WhaleScript : MonoBehaviour {
         ageInTics = age * timeDilataion;
 
         countdownToRotate = baseCountdowToRotate;
-        countdowToRefreshRadar = baseCountdowToRefreshRadar;
+        countdowToRefreshRadar = 0;
+
+        FindMyNeighbors();
 
     }
 
     // Update is called once per frame
-    void Update() {
-        if (ageInTics < 0) {
+    void Update()
+    {
+        if (ageInTics < 0)
+        {
             Destroy(this.gameObject);
         }
         ageInTics -= 1;
         age = ageInTics / timeDilataion;
 
+        FindMyNeighbors();
 
-        switch (currentSuperState) {
+        Wiggle();
+
+        switch (currentSuperState)
+        {
 
             case "SuperStateIDLE":
                 SuperStateIDLE();
@@ -106,40 +115,51 @@ public class WhaleScript : MonoBehaviour {
     /* --------------------------- // FSM \\ ---------------------------  */
 
 
-    void Reflex() {
+    
+
+    
+
+    void Reflex()
+    {
 
     }
 
 
-    void SuperStateIDLE() { // Quand on est en zone de repos 
+    void SuperStateIDLE()
+    { // Quand on est en zone de repos 
 
         Wiggle(); // + Nage vers / dans la zone repos 
 
-        if (!decided && worldObject.GetComponent<WorldScript>().season && InReposZone()) {
+        if (!decided && worldObject.GetComponent<WorldScript>().season && InReposZone())
+        {
 
             decided = true;
 
-            if (migrationDecision()) {
+            if (migrationDecision())
+            {
                 currentSuperState = "SuperStateMigration";
                 currentState = "StateRegroupement";
             }
         }
 
-        if (decided && !worldObject.GetComponent<WorldScript>().season) {
+        if (decided && !worldObject.GetComponent<WorldScript>().season)
+        {
             decided = false;
         }
 
     }
 
-    void SuperStateMigration() { 
-        switch (currentState) {
+    void SuperStateMigration()
+    {
+        switch (currentState)
+        {
 
             case "StateRegroupement":
                 StateRegroupement();
                 break;
 
             case "StateTrip":
-                StateTrip(); 
+                StateTrip();
                 break;
 
             case "StateDisband":
@@ -154,8 +174,10 @@ public class WhaleScript : MonoBehaviour {
 
     }
 
-    void SuperStateReproduction() { // Quand on est en zone de reproduction 
-        switch (currentState) {
+    void SuperStateReproduction()
+    { // Quand on est en zone de reproduction 
+        switch (currentState)
+        {
 
             case "StateRegroupement":
                 StateRegroupementSex();
@@ -169,7 +191,8 @@ public class WhaleScript : MonoBehaviour {
     }
 
 
-    void SuperStateMigrationBack() { // Chemin retour
+    void SuperStateMigrationBack()
+    { // Chemin retour
         switch (currentState)
         {
 
@@ -194,52 +217,64 @@ public class WhaleScript : MonoBehaviour {
     }
 
 
-    void StateIDLE() {
+    void StateIDLE()
+    {
         Wiggle();
     }
 
     // SUPERSTATE : MIGRATION
 
-    void StateRegroupement() {
-        if (worldObject.GetComponent<WorldScript>().inRegroupement) {
-            // GoTo(); worldObject.meetingPointRepos
+    void StateRegroupement()
+    {
+        if (worldObject.GetComponent<WorldScript>().inRegroupement)
+        {
+            GoTo(worldObject.GetComponent<WorldScript>().meetingPointRepos);
         }
-        else {
-            // Face ZoneReproduction
+        else
+        {
             currentState = "StateTrip";
         }
     }
 
-    void StateTrip() {
-        if (!InReproductionZone()) {
-            //Avancer
+    void StateTrip()
+    {
+        if (!InReproductionZone())
+        {
+            GoTo(worldObject.GetComponent<WorldScript>().meetingPointReproduction);
         }
-        else {
+        else
+        {
             currentState = "StateDisband";
         }
     }
 
-    void StateDisband() {
-        if (disbandTime < 0) {
+    void StateDisband()
+    {
+        if (disbandTime < 0)
+        {
             disbandTime = Random.Range(0, baseDisbandTime);
         }
         else currentState = "StateIDLE";
+        Wiggle();
         disbandTime -= 1;
     }
 
     // SUPERSTATE : REPRODUCTION
 
-    void StateRegroupementSex() {
+    void StateRegroupementSex()
+    {
 
     }
 
-    void StateSexParty() {
+    void StateSexParty()
+    {
 
     }
 
     // SUPERSATE : MIGRATIONBACK
 
-    void StateTripBack() {
+    void StateTripBack()
+    {
 
     }
 
@@ -248,9 +283,11 @@ public class WhaleScript : MonoBehaviour {
 
 
 
-    void FindMyNeighbors() {
+    void FindMyNeighbors()
+    {
 
-        if (countdowToRefreshRadar < 0) {
+        if (countdowToRefreshRadar < 0)
+        {
             countdowToRefreshRadar = baseCountdowToRefreshRadar;
             FindMyNeighborsOnce();
         }
@@ -259,26 +296,29 @@ public class WhaleScript : MonoBehaviour {
 
     }
 
-    void FindMyNeighborsOnce() {
+    void FindMyNeighborsOnce()
+    {
 
         neighborsList.Clear();
         GameObject[] neighborsTab = GameObject.FindGameObjectsWithTag("WhaleTAG");
-
-        foreach (GameObject ng in neighborsTab) {
-            double distance = Math.Sqrt(Math.Pow(ng.transform.position.x - transform.position.x, 2) + Math.Pow(ng.transform.position.y - transform.position.y, 2) + Math.Pow(ng.transform.position.z - transform.position.z, 2));
-            if (distance < neighborsRadar) neighborsList.Add(ng);
+        foreach (GameObject ng in neighborsTab)
+        {
+            neighborsList.Add(ng);
         }
 
     }
 
-    GameObject FindMyNearestNeighbor() {
+    GameObject FindMyNearestNeighbor()
+    {
         double minDistance = 100000.00;
         double distance;
         int indexOfMinDistanceNeighbor = 0;
 
-        for (int i=0; i<neighborsList.Count; i++) {
+        for (int i = 0; i < neighborsList.Count; i++)
+        {
             distance = distanceEucToMe(neighborsList[i]);
-            if (distance < minDistance) {
+            if (distance < minDistance)
+            {
                 minDistance = distance;
                 indexOfMinDistanceNeighbor = i;
             }
@@ -287,37 +327,49 @@ public class WhaleScript : MonoBehaviour {
         return neighborsList[indexOfMinDistanceNeighbor];
     }
 
+    public bool GetNeighbors(double d) {
+
+        GameObject NN = FindMyNearestNeighbor();
+        double distance = Math.Sqrt(Math.Pow(NN.transform.position.x - transform.position.x, 2) + Math.Pow(NN.transform.position.y - transform.position.y, 2) + Math.Pow(NN.transform.position.z - transform.position.z, 2));
+
+        if (distance < d) return true;
+
+        return false;
+    }
+
+
 
 
 
     /* --------------------------- // MOUVEMENT \\ ---------------------------  */
 
 
-    bool GoTo(GameObject target) {
-        double distance = Math.Sqrt(Math.Pow(target.transform.position.x - transform.position.x, 2) + Math.Pow(target.transform.position.y - transform.position.y, 2) + Math.Pow(target.transform.position.z - transform.position.z, 2));
-        if (distance > distanceRapprochement) {
-            transform.LookAt(target.transform);
-            transform.Rotate(new Vector3(90, 0, 0));
-            transform.Translate(new Vector3(0, spead, 0) * Time.deltaTime);
-            return true;
+    void GoTo(Vector3 meetingPoint) {
+        double d = distanceEucToMe(meetingPoint);
+        if (d > 30)
+        {
+            transform.LookAt(meetingPoint);
+            transform.Translate(new Vector3(0, 0, spead) * Time.deltaTime);
         }
-        else return false;
+        else { Wiggle();  }
     }
 
 
-    void Wiggle() { // 
+    void Wiggle()
+    { // 
         if (countdownToRotate < 0)
         {
             countdownToRotate = baseCountdowToRotate;
-            transform.Rotate(new Vector3(0, 0, Random.Range(-maxAngleRotation, maxAngleRotation)));
+            transform.Rotate(new Vector3(0, Random.Range(-maxAngleRotation, maxAngleRotation), 0));
         }
         else countdownToRotate -= 1;
 
-        transform.Translate(new Vector3(0, spead, 0) * Time.deltaTime);
+        transform.Translate(new Vector3(0, 0, spead) * Time.deltaTime);
     }
 
-    bool InReposZone() {
-        if (transform.position.x > 700 && transform.position.x < 1000 && transform.position.z > 400 && transform.position.z < 1000) return true; 
+    bool InReposZone()
+    {
+        if (transform.position.x > 700 && transform.position.x < 1000 && transform.position.z > 400 && transform.position.z < 1000) return true;
         return false;
     }
 
@@ -332,7 +384,8 @@ public class WhaleScript : MonoBehaviour {
     /* --------------------------- // OUTILS \\ ---------------------------  */
 
 
-    double distanceEuc(GameObject go1, GameObject go2) {
+    static double distanceEuc(GameObject go1, GameObject go2)
+    {
         return Math.Sqrt(Math.Pow(go1.transform.position.x - go2.transform.position.x, 2) + Math.Pow(go1.transform.position.y - go2.transform.position.y, 2) + Math.Pow(go1.transform.position.z - go2.transform.position.z, 2));
     }
 
@@ -341,8 +394,14 @@ public class WhaleScript : MonoBehaviour {
         return Math.Sqrt(Math.Pow(go.transform.position.x - transform.position.x, 2) + Math.Pow(go.transform.position.y - transform.position.y, 2) + Math.Pow(go.transform.position.z - transform.position.z, 2));
     }
 
+    double distanceEucToMe(Vector3 go)
+    {
+        return Math.Sqrt(Math.Pow(go.x - transform.position.x, 2) + Math.Pow(go.y - transform.position.y, 2) + Math.Pow(go.z - transform.position.z, 2));
+    }
 
-    bool migrationDecision() {
+
+    bool migrationDecision()
+    {
         int dice = (int)Random.Range(0, (float)(100 * probaMigration));
         if (dice <= 100 * probaMigration) return true;
         return false;
@@ -351,7 +410,6 @@ public class WhaleScript : MonoBehaviour {
 
 
 
-    
 
 
-    
+
