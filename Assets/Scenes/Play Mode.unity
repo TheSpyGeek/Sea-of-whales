@@ -596,7 +596,7 @@ PrefabInstance:
     - target: {fileID: 1904517775631058858, guid: 2cbfca9c1379542c7ad790e999fedc40,
         type: 3}
       propertyPath: baseSeasonDuration
-      value: 3000
+      value: 2000
       objectReference: {fileID: 0}
     - target: {fileID: 1904517775631058858, guid: 2cbfca9c1379542c7ad790e999fedc40,
         type: 3}

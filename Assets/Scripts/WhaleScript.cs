@@ -425,11 +425,10 @@ public class WhaleScript : MonoBehaviour
         return neighborsList[indexOfMinDistanceNeighbor];
     }
 
-    public bool GetNeighbors(double d) {
+    public bool GetNeighbors(float d) {
 
         GameObject NN = FindMyNearestNeighbor();
-        double distance = Math.Sqrt(Math.Pow(NN.transform.position.x - transform.position.x, 2) + Math.Pow(NN.transform.position.y - transform.position.y, 2) + Math.Pow(NN.transform.position.z - transform.position.z, 2));
-
+        double distance = (transform.position - NN.transform.position).magnitude;
         if (distance < d) return true;
 
         return false;
@@ -550,6 +549,12 @@ public class WhaleScript : MonoBehaviour
         int dice = (int)Random.Range(0, (float)(100 * probaMigration));
         if (dice <= 100 * probaMigration) return true;
         return false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        //Gizmos.DrawSphere(transform.position,30f);
     }
 }
 

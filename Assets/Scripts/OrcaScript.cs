@@ -26,7 +26,7 @@ public class OrcaScript : MonoBehaviour {
     
     private GameObject target = null;
     public double maxDetectionWhale = 200;
-    public double lonelinessWhaleDistance = 20;
+    public float lonelinessWhaleDistance = 20;
 
 
     private NavMeshAgent agent;
@@ -129,12 +129,13 @@ public class OrcaScript : MonoBehaviour {
     bool BeginTheHunt() {
         GameObject[] whaleTab = GameObject.FindGameObjectsWithTag("WhaleTAG");
 
-        int count = 0;
+        int maxcount = 0;
         const int nbWeakWhale = 3;
 
         foreach (GameObject w in whaleTab) {
+
             double distance = Math.Sqrt(Math.Pow(w.transform.position.x - transform.position.x, 2) + Math.Pow(w.transform.position.y - transform.position.y, 2) + Math.Pow(w.transform.position.z - transform.position.z, 2));
-            if (distance < maxDetectionWhale && !w.GetComponent<WhaleScript>().GetNeighbors(lonelinessWhaleDistance)) {
+            if(distance < maxDetectionWhale &&  w.GetComponent<WhaleScript>().GetNeighbors(lonelinessWhaleDistance)) {
                 target = w;
                 Debug.Log("BEGIN HUNT");
 
