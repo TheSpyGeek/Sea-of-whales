@@ -243,8 +243,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6576377768743542540}
-  - component: {fileID: 2177851549528693865}
-  - component: {fileID: 8531614253910849748}
   m_Layer: 0
   m_Name: OrcObject
   m_TagString: Untagged
@@ -269,49 +267,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2177851549528693865
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7861214999046974751}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31421aa9ba0fe4a5d933824a64ba2983, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeDilataion: 1000
-  worldObject: {fileID: 0}
-  baseDisbandTime: 50
-  probaMigration: 0.8
-  maxLifeExperence: 50
-  minLifeExperence: 20
-  spead: 0.7
-  maxAngleRotation: 30
-  baseCountdowToRotate: 100
-  distanceRapprochement: 10
-  neighborsRadar: 600
-  baseCountdowToRefreshRadar: 50
---- !u!114 &8531614253910849748
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7861214999046974751}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a456aff9682c247fead7f232e1e76af3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  groupeID: 0
-  baseRotation: {x: 0, y: 0, z: 0}
-  maxSpeed: 1
-  maxForce: 0.03
-  neighborhoodRadius: 3
-  separationAmount: 1
-  cohesionAmount: 1
-  alignmentAmount: 1
-  acceleration: {x: 0, y: 0}
-  velocity: {x: 0, y: 0}

@@ -121,7 +121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabWhale: {fileID: 4905690066768675324, guid: 8e77e927749b40d4d8bbfc4f39fe3f3c,
     type: 3}
-  prefabOrca: {fileID: 5494671264097896008, guid: aa618e7ac92ac415c9b793e6ed84e3b6,
+  prefabOrca: {fileID: 2330961069215897322, guid: e03b2e1275f6c3a4494d374a9fbddb4a,
     type: 3}
   nbWhales: 100
   nbOrcaGroup: 5
