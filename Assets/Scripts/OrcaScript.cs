@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
+
 
 public class OrcaScript : MonoBehaviour {
 
@@ -27,6 +29,7 @@ public class OrcaScript : MonoBehaviour {
     public double lonelinessWhaleDistance = 20;
 
 
+    private NavMeshAgent agent;
     private string currentState;
 
     // Start is called before the first frame update
@@ -38,6 +41,8 @@ public class OrcaScript : MonoBehaviour {
         worldObject = GameObject.Find("World");
 
         FindMyTeamates();
+
+        agent = GetComponent<NavMeshAgent>();
         
     }
 
@@ -77,7 +82,11 @@ public class OrcaScript : MonoBehaviour {
         if (countdownToRotate < 0)
         {
             countdownToRotate = baseCountdowToRotate;
-            transform.Rotate(rotation);
+            //transform.Rotate(rotation);
+
+            Vector3 destination = Vector3.RotateTowards(transform.forward, Vector3.up, rotation.y, 180);
+            agent.SetDestination(destination * 100);
+
 
             if (orcaID == 0 && BeginTheHunt()) {
                 currentState = "StateHunt";
@@ -95,7 +104,6 @@ public class OrcaScript : MonoBehaviour {
         }
         else countdownToRotate -= 1;
 
-        transform.Translate(new Vector3(0, 0, wiggleSpead) * Time.deltaTime);
 
         WrapAround();
 
@@ -127,7 +135,8 @@ public class OrcaScript : MonoBehaviour {
     void Hunt() {
         if (target != null) { // Doute si le null correspond bien comme test 
             if (orcaID == 0) {
-                transform.LookAt(target.transform);
+                //transform.LookAt(target.transform);
+                agent.SetDestination(transform.transform.position);
                 double distance = Math.Sqrt(Math.Pow(target.transform.position.x - transform.position.x, 2) + Math.Pow(target.transform.position.y - transform.position.y, 2) + Math.Pow(target.transform.position.z - transform.position.z, 2));
                 if (distance < 10) {
                     Destroy(target.gameObject);
@@ -136,10 +145,11 @@ public class OrcaScript : MonoBehaviour {
             }
 
             else {
-                // CA C EST DE LA MERDE
-                transform.rotation = myQueenOrca.transform.rotation;
+                //transform.rotation = myQueenOrca.transform.rotation;
+                Vector3 destination = Vector3.RotateTowards(transform.forward, Vector3.up, myQueenOrca.transform.rotation.y, 180);
+                agent.SetDestination(destination * 100);
             }
-            transform.Translate(new Vector3(0, 0, huntSpead) * Time.deltaTime);
+            //transform.Translate(new Vector3(0, 0, huntSpead) * Time.deltaTime);
         }
         else {
             currentState = "StateWiggle";

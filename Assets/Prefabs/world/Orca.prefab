@@ -95,6 +95,16 @@ PrefabInstance:
       propertyPath: m_BaseOffset
       value: 0.63
       objectReference: {fileID: 0}
+    - target: {fileID: 1935079166925728214, guid: e1ec3291104125847a024b701e47681e,
+        type: 3}
+      propertyPath: m_Speed
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1935079166925728214, guid: e1ec3291104125847a024b701e47681e,
+        type: 3}
+      propertyPath: m_Acceleration
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1935079166925728209, guid: e1ec3291104125847a024b701e47681e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e1ec3291104125847a024b701e47681e, type: 3}
