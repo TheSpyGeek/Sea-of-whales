@@ -4,11 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - ReposZoneTag
   - ReproductionZoneTag
-  - WhaleTAG
+  - ReposZoneTag
   - OrcaTAG
-  - World
   layers:
   - Default
   - TransparentFX
@@ -18,7 +16,7 @@ TagManager:
   - UI
   - 
   - 
-  - 
+  - Ground
   - 
   - 
   - 
