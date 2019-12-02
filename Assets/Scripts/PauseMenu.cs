@@ -12,6 +12,10 @@ public class PauseMenu : MonoBehaviour
 
     public Slider slider;
 
+    private Canvas canva;
+
+    public WorldScript world;
+
     private void Start()
     {
         slider.value = Time.timeScale;
@@ -49,15 +53,16 @@ public class PauseMenu : MonoBehaviour
     public void LoadMenu() {
         Time.timeScale = 1f;
         gamePaused = false;
-        SceneManager.LoadScene("Start Menu");
+        //SceneManager.LoadScene("Start Menu");
     }
 
 
     public void reloadScene()
     {
-        Scene scene = SceneManager.GetActiveScene();
-        Debug.Log(scene.name);
-        SceneManager.LoadScene(scene.buildIndex);
+        pauseMenuUI.SetActive(false);
+        DontDestroyOnLoad(this.gameObject);
         Time.timeScale = slider.value;
+        world.CleanScene();
+        world.Setup();
     }
 }

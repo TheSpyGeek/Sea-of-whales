@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WorldScript : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class WorldScript : MonoBehaviour
     public int maxX = 1000;
     public int minZ = 400;
     public int maxZ = 1000;
+
+    public Slider sliderWhale;
+    public Slider sliderOrca;
 
     //public List<Vector3> orcaGroupVector;
     public Vector3[] orcaGroupVector;
@@ -37,18 +41,22 @@ public class WorldScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Setup();
+    }
+
+    public void Setup() {
         season = false;
         seasonDuration = baseSeasonDuration;
         meetingPointRepos = new Vector3(Random.Range(minX, maxX), 5, Random.Range(minZ, maxZ));
         meetingPointReproduction = new Vector3(Random.Range(0, 200), 5, Random.Range(0, 300));
 
-        
+
 
         regroupementTime = BaseRegroupementTime;
 
 
         orcaGroupVector = new Vector3[nbOrcaGroup];
-        
+
 
         WhaleCreation();
         OrcaCreation();
@@ -58,9 +66,22 @@ public class WorldScript : MonoBehaviour
 
     }
 
+
+    public void CleanScene() {
+        GameObject [] objs = GameObject.FindGameObjectsWithTag("WhaleTAG");
+        foreach(GameObject o in objs) {
+            Destroy(o);
+        }
+
+        GameObject[] obj = GameObject.FindGameObjectsWithTag("OrcaTAG");
+        foreach(GameObject o in obj) {
+            Destroy(o);
+        }
+    }
+
     void WhaleCreation()
     {
-        for (int i = 0; i < nbWhales; i++)
+        for (int i = 0; i < sliderWhale.value; i++)
         {
             Vector3 randomPos = new Vector3(Random.Range(minX, maxX), 5, Random.Range(minZ, maxZ));
             Instantiate(prefabWhale, randomPos, Quaternion.identity);
@@ -87,7 +108,7 @@ public class WorldScript : MonoBehaviour
     void OrcaCreation()
     {
         OrcaGroupDispertionInit();
-        for (int i = 0; i < nbOrcaGroup; i++)
+        for (int i = 0; i < sliderOrca.value; i++)
         {
             Vector3 randomPos = new Vector3(Random.Range(0, 1000), 5, Random.Range(0, 1000));
 
