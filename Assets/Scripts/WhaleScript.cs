@@ -186,13 +186,16 @@ public class WhaleScript : MonoBehaviour
     }
 
 
+    // A un moment RESTEINZONE 
+
+
     void SuperStateMigrationBack()
     { // Chemin retour
         switch (currentState)
         {
 
             case "StateRegroupementBack":
-                StateRegroupement();
+                StateRegroupementBack();
                 break;
 
             case "StateTripBack":
@@ -281,7 +284,7 @@ public class WhaleScript : MonoBehaviour
 
     void StateTripBack()
     {
-        if (!InReproductionZone())
+        if (!InReposZone())
         {
             GoTo(worldObject.GetComponent<WorldScript>().meetingPointRepos);
         }
