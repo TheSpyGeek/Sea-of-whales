@@ -11,6 +11,7 @@ public class WhaleScript : MonoBehaviour
     // A mettre dans la classe World :
     public int timeDilataion = 1000;
     public GameObject worldObject;
+    public GameObject WhaleObject;
 
     public int baseDisbandTime = 50;
     private int disbandTime;
@@ -19,7 +20,7 @@ public class WhaleScript : MonoBehaviour
     public double probaMigration = 0.80;
     private bool migre = false;
     private bool decided = false;
-    private bool pregnent = false;
+    public bool pregnent = false;
     private bool recentMother = false;
 
 
@@ -39,6 +40,7 @@ public class WhaleScript : MonoBehaviour
     public int baseCountdowToRotate = 100;
     private int countdownToRotate;
 
+    public int zoneGoto = 60;
     public double distanceRapprochement = 10.0;
     public double neighborsRadar = 600.0;
     public int baseCountdowToRefreshRadar = 100;
@@ -48,6 +50,9 @@ public class WhaleScript : MonoBehaviour
 
     private NavMeshAgent agent;
 
+
+    public GameObject MyMom;
+    public GameObject baby;
 
 
 
@@ -67,6 +72,7 @@ public class WhaleScript : MonoBehaviour
         lifeExperence = Random.Range(minLifeExperence, maxLifeExperence);
         age = Random.Range(5, lifeExperence);
         ageInTics = age * timeDilataion;
+        
 
         countdownToRotate = baseCountdowToRotate;
         countdowToRefreshRadar = 0;
@@ -91,6 +97,10 @@ public class WhaleScript : MonoBehaviour
 
         switch (currentSuperState)
         {
+
+            case "SuperStateBaby":
+                Baby();
+                break;
 
             case "SuperStateIDLE":
                 SuperStateIDLE();
@@ -129,6 +139,21 @@ public class WhaleScript : MonoBehaviour
 
     }
 
+    void Baby() {
+
+        if (InReposZone())
+        {
+            currentSuperState = "SuperStateIDLE";
+            currentState = "StateIDLE";
+        }
+        else
+        {
+            FollowMom(MyMom);
+        }
+
+
+    }
+
 
     void SuperStateIDLE()
     { // Quand on est en zone de repos 
@@ -151,6 +176,13 @@ public class WhaleScript : MonoBehaviour
         if (decided && !worldObject.GetComponent<WorldScript>().season)
         {
             decided = false;
+        }
+
+        if (sex == false)
+        {
+            if (Random.Range(0, 1) == 0) { pregnent = false; }
+            else { pregnent = true; }
+
         }
 
     }
@@ -258,6 +290,14 @@ public class WhaleScript : MonoBehaviour
             {
                 Wiggle();
                 RestInTheFuckingReproductionZone();
+                if (pregnent) {
+                    pregnent = false;
+                    Vector3 offset = new Vector3(10, 0, 10);
+                    var obj = (GameObject)Instantiate(WhaleObject, transform.position +offset, Quaternion.identity);
+                    obj.GetComponent<WhaleScript>().MyMom = this.gameObject;
+                    obj.GetComponent<WhaleScript>().currentSuperState = "SuperStateBaby";
+                    Debug.Log("Naissance");
+                }
 
             }
             else
@@ -312,7 +352,7 @@ public class WhaleScript : MonoBehaviour
         for (int i = 0; i < neighborsList.Count; i++)
         {
             distance = distanceEucToMe(neighborsList[i]);
-            if (distance < minDistance && neighborsList[i].GetComponent<WhaleScript>().sex == false)
+            if (distance < minDistance && neighborsList[i].GetComponent<WhaleScript>().sex == false && neighborsList[i].GetComponent<WhaleScript>().pregnent == false)
             {
                 minDistance = distance;
                 indexOfMinDistanceNeighbor = i;
@@ -386,7 +426,7 @@ public class WhaleScript : MonoBehaviour
 
     void GoTo(Vector3 meetingPoint) {
         double d = distanceEucToMe(meetingPoint);
-        if (d > 30)
+        if (d > zoneGoto)
         {
             NavMeshAgent agent = gameObject.GetComponent<NavMeshAgent>();
             agent.SetDestination(meetingPoint);
@@ -395,6 +435,11 @@ public class WhaleScript : MonoBehaviour
 
         }
         else { Wiggle();  }
+    }
+
+    void FollowMom(GameObject mom) {
+        transform.rotation = mom.transform.rotation;
+        transform.Translate(new Vector3(0, 0, spead) * Time.deltaTime);
     }
 
 
