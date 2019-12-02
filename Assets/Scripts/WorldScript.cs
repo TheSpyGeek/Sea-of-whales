@@ -103,18 +103,20 @@ public class WorldScript : MonoBehaviour
 
     void Update()
     {
+        print("Season : " + season + " Season duration : " + seasonDuration);
         if (seasonDuration < 0)
         {
             season = !season;
             seasonDuration = baseSeasonDuration;
             meetingPointRepos = new Vector3(Random.Range(minX, maxX), 5, Random.Range(minZ, maxZ));
             inRegroupement = true;
-
+            print("Season : " + season);
         }
         seasonDuration -= 1;
 
         if (inRegroupement)
         {
+            print("Regroupement : " + regroupementTime);
             regroupementTime -= 1;
             if (regroupementTime < 0)
             {
