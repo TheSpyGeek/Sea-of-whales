@@ -227,7 +227,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 6e2f3b2fc6a4e47679c9fc50a02dcbd7,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 88.9
+      value: 98.29
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 6e2f3b2fc6a4e47679c9fc50a02dcbd7,
         type: 3}
@@ -391,13 +391,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 939457096}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31421aa9ba0fe4a5d933824a64ba2983, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   timeDilataion: 1000
-  worldObject: {fileID: 0}
+  worldObject: {fileID: 1268214719}
   baseDisbandTime: 50
   probaMigration: 0.8
   maxLifeExperence: 50
@@ -408,6 +408,18 @@ MonoBehaviour:
   distanceRapprochement: 10
   neighborsRadar: 600
   baseCountdowToRefreshRadar: 50
+--- !u!114 &939457099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 939457096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60e867771fba64796bf80ee8aae61b25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -547,7 +559,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabWhale: {fileID: 8296172668381449442}
   prefabOrca: {fileID: 8296172668970883674}
-  nbWhales: 500
+  nbWhales: 200
   nbOrcaGroup: 5
   minX: 700
   maxX: 1000
@@ -558,7 +570,7 @@ MonoBehaviour:
   orcaDispertionOffset: 10
   maxOrcaAngleRotation: 45
   season: 1
-  baseSeasonDuration: 10000
+  baseSeasonDuration: 1000
   meetingPointRepos: {x: 0, y: 0, z: 0}
   meetingPointReproduction: {x: 0, y: 0, z: 0}
   BaseRegroupementTime: 300
@@ -688,7 +700,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1521181793}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 55d39ac78deab4c0aa7f10c070070426, type: 3}
   m_Name: 
@@ -701,7 +713,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1521181793}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 079ea026e685e4ea2a1b716e96a04978, type: 3}
   m_Name: 
@@ -733,7 +745,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 6e2f3b2fc6a4e47679c9fc50a02dcbd7,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 38.4
+      value: 17.6
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 6e2f3b2fc6a4e47679c9fc50a02dcbd7,
         type: 3}
@@ -792,7 +804,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 78ed57506408b7346aa87866d6b4aacd,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 63.58
+      value: 36.26
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 78ed57506408b7346aa87866d6b4aacd,
         type: 3}
@@ -802,7 +814,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 78ed57506408b7346aa87866d6b4aacd,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 46.97
+      value: 10.84
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 78ed57506408b7346aa87866d6b4aacd,
         type: 3}

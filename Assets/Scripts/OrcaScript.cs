@@ -97,8 +97,16 @@ public class OrcaScript : MonoBehaviour {
 
         transform.Translate(new Vector3(0, 0, wiggleSpead) * Time.deltaTime);
 
-        
+        WrapAround();
 
+    }
+
+    void WrapAround()
+    {
+        if (transform.position.x < 0) transform.position = new Vector3(1000, transform.position.y, transform.position.z);
+        if (transform.position.z < 0) transform.position = new Vector3(transform.position.x, transform.position.y, 1000);
+        if (transform.position.x > 1000) transform.position = new Vector3(0, transform.position.y, transform.position.z);
+        if (transform.position.z > 1000) transform.position = new Vector3(transform.position.x, transform.position.y, 0);
     }
 
 
@@ -129,8 +137,7 @@ public class OrcaScript : MonoBehaviour {
 
             else {
                 // CA C EST DE LA MERDE
-                float angle = transform.rotation.y - myQueenOrca.transform.rotation.y;
-                transform.Rotate(new Vector3(0, angle, 0));
+                transform.rotation = myQueenOrca.transform.rotation;
             }
             transform.Translate(new Vector3(0, 0, huntSpead) * Time.deltaTime);
         }

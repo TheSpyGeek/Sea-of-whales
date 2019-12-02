@@ -23,7 +23,7 @@ public class WhaleScript : MonoBehaviour
 
 
     private int id;
-    private bool sex;
+    public bool sex;
     public int maxLifeExperence = 50;
     public int minLifeExperence = 20;
     private int lifeExperence;
@@ -128,7 +128,8 @@ public class WhaleScript : MonoBehaviour
     void SuperStateIDLE()
     { // Quand on est en zone de repos 
 
-        Wiggle(); // + Nage vers / dans la zone repos 
+        Wiggle(); // + Nage vers / dans la zone repos
+        RestInTheFuckingReposZone();
 
         if (!decided && worldObject.GetComponent<WorldScript>().season && InReposZone())
         {
@@ -162,10 +163,6 @@ public class WhaleScript : MonoBehaviour
                 StateTrip();
                 break;
 
-            case "StateDisband":
-                StateDisband();
-                break;
-
             default:
                 print("erreur SpuperStateMigration Default Statement");
                 break;
@@ -179,13 +176,11 @@ public class WhaleScript : MonoBehaviour
         switch (currentState)
         {
 
-            case "StateRegroupement":
+            case "StateRegroupementSex":
                 StateRegroupementSex();
                 break;
 
-            case "StateSexParty":
-                StateSexParty();
-                break;
+            
         }
 
     }
@@ -196,16 +191,12 @@ public class WhaleScript : MonoBehaviour
         switch (currentState)
         {
 
-            case "StateRegroupement":
+            case "StateRegroupementBack":
                 StateRegroupement();
                 break;
 
             case "StateTripBack":
                 StateTripBack();
-                break;
-
-            case "StateDisband":
-                StateDisband();
                 break;
 
             default:
@@ -244,43 +235,85 @@ public class WhaleScript : MonoBehaviour
         }
         else
         {
-            currentState = "StateDisband";
+            currentSuperState = "SuperStateReproduction";
+            currentState = "StateRegroupementSex";
         }
-    }
-
-    void StateDisband()
-    {
-        if (disbandTime < 0)
-        {
-            disbandTime = Random.Range(0, baseDisbandTime);
-        }
-        else currentState = "StateIDLE";
-        Wiggle();
-        disbandTime -= 1;
     }
 
     // SUPERSTATE : REPRODUCTION
 
     void StateRegroupementSex()
     {
+        if (worldObject.GetComponent<WorldScript>().season)
+        {
+            if (sex == false)
+            {
+                Wiggle();
+                RestInTheFuckingReproductionZone();
 
-    }
+            }
+            else
+            {
+                transform.LookAt(FindLove().transform);
+                transform.Translate(new Vector3(0, 0, spead) * Time.deltaTime);
+            }
+        }
 
-    void StateSexParty()
-    {
-
+        else {
+            currentSuperState = "SuperStateMigrationBack";
+            currentState = "StateRegroupementBack";
+        }
     }
 
     // SUPERSATE : MIGRATIONBACK
 
+    void StateRegroupementBack()
+    {
+        if (worldObject.GetComponent<WorldScript>().inRegroupement)
+        {
+            GoTo(worldObject.GetComponent<WorldScript>().meetingPointReproduction);
+        }
+        else
+        {
+            currentState = "StateTripBack";
+        }
+    }
+
     void StateTripBack()
     {
-
+        if (!InReproductionZone())
+        {
+            GoTo(worldObject.GetComponent<WorldScript>().meetingPointRepos);
+        }
+        else
+        {
+            currentSuperState = "SuperStateIDLE";
+            currentState = "StateIDLE";
+        }
     }
 
 
     /* --------------------------- // SOCIAL \\ ---------------------------  */
 
+    GameObject FindLove() {
+        FindMyNeighbors();
+
+        double minDistance = 100000.00;
+        double distance;
+        int indexOfMinDistanceNeighbor = 0;
+
+        for (int i = 0; i < neighborsList.Count; i++)
+        {
+            distance = distanceEucToMe(neighborsList[i]);
+            if (distance < minDistance && neighborsList[i].GetComponent<WhaleScript>().sex == false)
+            {
+                minDistance = distance;
+                indexOfMinDistanceNeighbor = i;
+            }
+        }
+
+        return neighborsList[indexOfMinDistanceNeighbor];
+    }
 
 
     void FindMyNeighbors()
@@ -365,6 +398,29 @@ public class WhaleScript : MonoBehaviour
         else countdownToRotate -= 1;
 
         transform.Translate(new Vector3(0, 0, spead) * Time.deltaTime);
+        //RestInTheFuckingWorld();                                                                                    // Sortir (Wrap) ce code du wiggle et le metre dans le super etat 
+    }
+
+    void RestInTheFuckingWorld() {
+        if (transform.position.x < 0 || transform.position.x > 1000 || transform.position.z < 0 || transform.position.z > 1000)
+        {
+            transform.Rotate(new Vector3(0, 90, 0));
+        }
+    }
+
+    void RestInTheFuckingReposZone()
+    {
+        if (transform.position.x < 700 || transform.position.x > 1000 || transform.position.z < 400 || transform.position.z > 1000)
+        {
+            transform.Rotate(new Vector3(0, 90, 0));
+        }
+    }
+
+    void RestInTheFuckingReproductionZone() {
+        if (transform.position.x < 0 || transform.position.x > 200 || transform.position.z < 0 || transform.position.z > 300)
+        {
+            transform.Rotate(new Vector3(0, 90, 0));
+        }
     }
 
     bool InReposZone()

@@ -19,8 +19,7 @@ public class Test2Script : MonoBehaviour
         {
             //Vector3 ba = new Vector3(transform.rotation.x - target.transform.rotation.x, transform.rotation.y - target.transform.rotation.y, transform.rotation.z - target.transform.rotation.z);
 
-            Vector3 worldAngle = transform.TransformDirection(target.transform.rotation.x, target.transform.rotation.y, target.transform.rotation.z);
-            transform.Rotate(new Vector3(0, worldAngle.y, 0));
+            transform.rotation = target.transform.rotation;
         }
     }
 }
