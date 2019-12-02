@@ -19,13 +19,14 @@ public class AIController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButtonDown(0)) {
-			Debug.Log("Test click");
+
+
+        if(Input.GetMouseButtonDown(0) || Input.GetAxis("Click") > 0) {
             if(!PauseMenu.gamePaused) {
-				Debug.Log("action");
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
 
+                Debug.Log(ray.direction);
                 if(Physics.Raycast(ray, out hit, 100, whatcanBeClickedOn)) {
                     agent.SetDestination(hit.point);
                 }
