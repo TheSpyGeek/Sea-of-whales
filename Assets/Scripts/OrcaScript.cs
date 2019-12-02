@@ -51,10 +51,14 @@ public class OrcaScript : MonoBehaviour {
 
         switch (currentState) {
             case "StateWiggle":
+                agent.acceleration = 10;
+                agent.speed = 6;
                 Wiggle(worldObject.GetComponent<WorldScript>().orcaGroupVector[groupeID]);
                 break;
 
             case "StateHunt":
+                agent.speed = 15;
+                agent.acceleration = 15;
                 Hunt();
                 break;
 
@@ -124,11 +128,16 @@ public class OrcaScript : MonoBehaviour {
 
     bool BeginTheHunt() {
         GameObject[] whaleTab = GameObject.FindGameObjectsWithTag("WhaleTAG");
-        
+
+        int count = 0;
+        const int nbWeakWhale = 3;
+
         foreach (GameObject w in whaleTab) {
             double distance = Math.Sqrt(Math.Pow(w.transform.position.x - transform.position.x, 2) + Math.Pow(w.transform.position.y - transform.position.y, 2) + Math.Pow(w.transform.position.z - transform.position.z, 2));
             if (distance < maxDetectionWhale && !w.GetComponent<WhaleScript>().GetNeighbors(lonelinessWhaleDistance)) {
                 target = w;
+                Debug.Log("BEGIN HUNT");
+
                 return true;
             }
         }
