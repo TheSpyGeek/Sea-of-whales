@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using UnityEngine.AI;
 
 public class WhaleScript : MonoBehaviour
 {
@@ -31,7 +32,9 @@ public class WhaleScript : MonoBehaviour
     private int age;
     private int ageInTics;
 
+    [SerializeField]
     private string currentSuperState = "SuperStateIDLE";
+    [SerializeField]
     private string currentState = "StateIDLE";
 
     public float spead = 0.7f;
@@ -46,20 +49,28 @@ public class WhaleScript : MonoBehaviour
     private int countdowToRefreshRadar;
     private List<GameObject> neighborsList = new List<GameObject>();
 
+
+    private NavMeshAgent agent;
+
+
     public GameObject MyMom;
     public GameObject baby;
+
 
 
     // Start is called before the first frame update
     void Start()
     {
+        agent = gameObject.GetComponent<NavMeshAgent>();
         worldObject = GameObject.Find("World");
 
         disbandTime = Random.Range(0, baseDisbandTime);
 
 
-        if (Random.Range(0, 1) == 0) { sex = false; }
-        else { sex = true; }
+        agent.nextPosition = transform.position;
+
+        if (Random.Range(0, 100) > 60) { sex = true; }
+        else { sex = false; }
 
 
         lifeExperence = Random.Range(minLifeExperence, maxLifeExperence);
@@ -77,6 +88,11 @@ public class WhaleScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(ageInTics < 50 && MyMom == null)
+        {
+            Destroy(this.gameObject);
+        }
+
         if (ageInTics < 0)
         {
             Destroy(this.gameObject);
@@ -84,7 +100,8 @@ public class WhaleScript : MonoBehaviour
         ageInTics -= 1;
         age = ageInTics / timeDilataion;
 
-        FindMyNeighbors();
+
+        FindMyNeighborsOnce();
 
         Wiggle();
 
@@ -139,9 +156,14 @@ public class WhaleScript : MonoBehaviour
             currentSuperState = "SuperStateIDLE";
             currentState = "StateIDLE";
         }
+        else if (worldObject.GetComponent<WorldScript>().season)
+        {
+
+        }
         else
         {
-            FollowMom(MyMom);
+            //FollowMom(MyMom);
+            Wiggle();
         }
 
 
@@ -173,7 +195,7 @@ public class WhaleScript : MonoBehaviour
 
         if (sex == false)
         {
-            if (Random.Range(0, 1) == 0) { pregnent = false; }
+            if (Random.Range(0, 100) > 50) { pregnent = false; }
             else { pregnent = true; }
 
         }
@@ -286,17 +308,19 @@ public class WhaleScript : MonoBehaviour
                 if (pregnent) {
                     pregnent = false;
                     Vector3 offset = new Vector3(10, 0, 10);
-                    var obj = (GameObject)Instantiate(WhaleObject, transform.position +offset, Quaternion.identity);
+                    var obj = (GameObject)Instantiate(WhaleObject, transform.position + offset, Quaternion.identity);
                     obj.GetComponent<WhaleScript>().MyMom = this.gameObject;
-                    obj.GetComponent<WhaleScript>().currentSuperState = "SuperStateBaby";
-                    Debug.Log("Naissance");
+                    obj.GetComponent<WhaleScript>().currentSuperState = currentSuperState;
+                    obj.GetComponent<WhaleScript>().currentState = currentState;
+                    obj.GetComponent<WhaleScript>().age = Random.Range(maxLifeExperence, maxLifeExperence + 20);
+                    obj.GetComponent<NavMeshAgent>().nextPosition = transform.position + offset;
+                    Debug.LogWarning("Naissance");
                 }
 
             }
             else
             {
-                transform.LookAt(FindLove().transform);
-                transform.Translate(new Vector3(0, 0, spead) * Time.deltaTime);
+                agent.SetDestination(FindLove().transform.position);
             }
         }
 
@@ -401,11 +425,10 @@ public class WhaleScript : MonoBehaviour
         return neighborsList[indexOfMinDistanceNeighbor];
     }
 
-    public bool GetNeighbors(double d) {
+    public bool GetNeighbors(float d) {
 
         GameObject NN = FindMyNearestNeighbor();
-        double distance = Math.Sqrt(Math.Pow(NN.transform.position.x - transform.position.x, 2) + Math.Pow(NN.transform.position.y - transform.position.y, 2) + Math.Pow(NN.transform.position.z - transform.position.z, 2));
-
+        double distance = (transform.position - NN.transform.position).magnitude;
         if (distance < d) return true;
 
         return false;
@@ -422,13 +445,20 @@ public class WhaleScript : MonoBehaviour
         double d = distanceEucToMe(meetingPoint);
         if (d > zoneGoto)
         {
-            transform.LookAt(meetingPoint);
-            transform.Translate(new Vector3(0, 0, spead) * Time.deltaTime);
+            NavMeshAgent agent = gameObject.GetComponent<NavMeshAgent>();
+            agent.SetDestination(meetingPoint);
+            /*transform.LookAt(meetingPoint);
+            transform.Translate(new Vector3(0, 0, spead) * Time.deltaTime);*/
+
         }
         else { Wiggle();  }
     }
 
     void FollowMom(GameObject mom) {
+        if(mom == null)
+        {
+            Destroy(this.gameObject);
+        }
         transform.rotation = mom.transform.rotation;
         transform.Translate(new Vector3(0, 0, spead) * Time.deltaTime);
     }
@@ -439,33 +469,40 @@ public class WhaleScript : MonoBehaviour
         if (countdownToRotate < 0)
         {
             countdownToRotate = baseCountdowToRotate;
-            transform.Rotate(new Vector3(0, Random.Range(-maxAngleRotation, maxAngleRotation), 0));
+            Vector3 randomPos = new Vector3(Random.Range(0, 1000), 0, Random.Range(0, 1000));
+            agent.SetDestination(randomPos);
         }
         else countdownToRotate -= 1;
 
-        transform.Translate(new Vector3(0, 0, spead) * Time.deltaTime);
         //RestInTheFuckingWorld();                                                                                    // Sortir (Wrap) ce code du wiggle et le metre dans le super etat 
     }
 
     void RestInTheFuckingWorld() {
-        if (transform.position.x < 0 || transform.position.x > 1000 || transform.position.z < 0 || transform.position.z > 1000)
+        if (InWorld())
         {
-            transform.Rotate(new Vector3(0, 90, 0));
+
+            Vector3 randomPos = new Vector3(Random.Range(0, 1000), 0, Random.Range(0, 1000));
+            agent.SetDestination(randomPos);
+
         }
+
+        //Vector3 randomPos = new Vector3(Random.Range(0, 1000), 0, Random.Range()
     }
 
     void RestInTheFuckingReposZone()
     {
-        if (transform.position.x < 700 || transform.position.x > 1000 || transform.position.z < 400 || transform.position.z > 1000)
+        if (InReposZone())
         {
-            transform.Rotate(new Vector3(0, 90, 0));
+            Vector3 randomPos = new Vector3(Random.Range(700, 1000), 0, Random.Range(400, 1000));
+            agent.SetDestination(randomPos);
         }
     }
 
     void RestInTheFuckingReproductionZone() {
-        if (transform.position.x < 0 || transform.position.x > 200 || transform.position.z < 0 || transform.position.z > 300)
+        if (InReproductionZone())
         {
-            transform.Rotate(new Vector3(0, 90, 0));
+            Vector3 randomPos = new Vector3(Random.Range(0, 200), 0, Random.Range(0, 300));
+            agent.SetDestination(randomPos);
         }
     }
 
@@ -473,6 +510,11 @@ public class WhaleScript : MonoBehaviour
     {
         if (transform.position.x > 700 && transform.position.x < 1000 && transform.position.z > 400 && transform.position.z < 1000) return true;
         return false;
+    }
+
+    bool InWorld()
+    {
+        return transform.position.x < 0 || transform.position.x > 1000 || transform.position.z < 0 || transform.position.z > 1000;
     }
 
     bool InReproductionZone()
@@ -507,6 +549,12 @@ public class WhaleScript : MonoBehaviour
         int dice = (int)Random.Range(0, (float)(100 * probaMigration));
         if (dice <= 100 * probaMigration) return true;
         return false;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        //Gizmos.DrawSphere(transform.position,30f);
     }
 }
 

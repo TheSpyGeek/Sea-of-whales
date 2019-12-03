@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WorldScript : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class WorldScript : MonoBehaviour
     public int maxX = 1000;
     public int minZ = 400;
     public int maxZ = 1000;
+
+    public Slider sliderWhale;
+    public Slider sliderOrca;
 
     //public List<Vector3> orcaGroupVector;
     public Vector3[] orcaGroupVector;
@@ -30,35 +34,54 @@ public class WorldScript : MonoBehaviour
     private int regroupementTime;
     public bool inRegroupement = true;
 
+
+    public float updateDirectionOrca = 1;
+    private float lastUpdate;
+
     // Start is called before the first frame update
     void Start()
     {
+        //Setup();
+    }
+
+    public void Setup() {
         season = false;
         seasonDuration = baseSeasonDuration;
         meetingPointRepos = new Vector3(Random.Range(minX, maxX), 5, Random.Range(minZ, maxZ));
         meetingPointReproduction = new Vector3(Random.Range(0, 200), 5, Random.Range(0, 300));
 
-        
+
 
         regroupementTime = BaseRegroupementTime;
 
 
         orcaGroupVector = new Vector3[nbOrcaGroup];
-        
 
-    WhaleCreation();
-    OrcaCreation();
 
-        for (int i = 0; i < nbOrcaGroup; i++)
-        {
-            orcaGroupVector[i] = new Vector3(0, Random.Range(-maxOrcaAngleRotation, maxOrcaAngleRotation), 0);
+        WhaleCreation();
+        OrcaCreation();
+
+        computeVectorDirectionOrca();
+        lastUpdate = Time.time;
+
+    }
+
+
+    public void CleanScene() {
+        GameObject [] objs = GameObject.FindGameObjectsWithTag("WhaleTAG");
+        foreach(GameObject o in objs) {
+            Destroy(o);
         }
 
+        GameObject[] obj = GameObject.FindGameObjectsWithTag("OrcaTAG");
+        foreach(GameObject o in obj) {
+            Destroy(o);
+        }
     }
 
     void WhaleCreation()
     {
-        for (int i = 0; i < nbWhales; i++)
+        for (int i = 0; i < sliderWhale.value; i++)
         {
             Vector3 randomPos = new Vector3(Random.Range(minX, maxX), 5, Random.Range(minZ, maxZ));
             Instantiate(prefabWhale, randomPos, Quaternion.identity);
@@ -103,20 +126,20 @@ public class WorldScript : MonoBehaviour
 
     void Update()
     {
-        print("Season : " + season + " Season duration : " + seasonDuration);
+        //print("Season : " + season + " Season duration : " + seasonDuration);
         if (seasonDuration < 0)
         {
             season = !season;
             seasonDuration = baseSeasonDuration;
             meetingPointRepos = new Vector3(Random.Range(minX, maxX), 5, Random.Range(minZ, maxZ));
             inRegroupement = true;
-            print("Season : " + season);
+            //print("Season : " + season);
         }
         seasonDuration -= 1;
 
         if (inRegroupement)
         {
-            print("Regroupement : " + regroupementTime);
+            //print("Regroupement : " + regroupementTime);
             regroupementTime -= 1;
             if (regroupementTime < 0)
             {
@@ -125,11 +148,24 @@ public class WorldScript : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < nbOrcaGroup; i++)
+
+
+        if(lastUpdate + updateDirectionOrca < Time.time)
         {
-            orcaGroupVector[i] = new Vector3(0, Random.Range(-maxOrcaAngleRotation, maxOrcaAngleRotation), 0);
+            computeVectorDirectionOrca();
+            lastUpdate = Time.time;
         }
 
 
+
+    }
+
+
+    void computeVectorDirectionOrca()
+    {
+        for (int i = 0; i < nbOrcaGroup; i++)
+        {
+            orcaGroupVector[i] = new Vector3(Random.Range(0, 1000), 0, Random.Range(0, 1000));
+        }
     }
 }
