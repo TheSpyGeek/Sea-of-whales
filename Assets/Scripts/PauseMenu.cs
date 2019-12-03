@@ -10,15 +10,22 @@ public class PauseMenu : MonoBehaviour
 
     public GameObject pauseMenuUI;
 
+    public GameObject commencer;
+    public GameObject reprendre;
+
     public Slider slider;
 
     private Canvas canva;
 
     public WorldScript world;
 
-    private void Start()
-    {
+    private void Start() {
+        reprendre.SetActive(false);
+        commencer.SetActive(true);
         slider.value = Time.timeScale;
+        Time.timeScale = 0f;
+        gamePaused = true;
+        pauseMenuUI.SetActive(true);
     }
 
     // Update is called once per frame
@@ -49,20 +56,30 @@ public class PauseMenu : MonoBehaviour
 
     }
 
+    public void Commencer() {
 
-    public void LoadMenu() {
+        world.CleanScene();
+        world.Setup();
+        pauseMenuUI.SetActive(false);
+        Time.timeScale = slider.value;
+        gamePaused = false;
+        reprendre.SetActive(true);
+        commencer.SetActive(false);
+    }
+
+
+    public void Quit() {
         Time.timeScale = 1f;
         gamePaused = false;
-        //SceneManager.LoadScene("Start Menu");
+        Application.Quit();
     }
 
 
     public void reloadScene()
     {
         pauseMenuUI.SetActive(false);
-        DontDestroyOnLoad(this.gameObject);
         Time.timeScale = slider.value;
-        world.CleanScene();
-        world.Setup();
+        gamePaused = false;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

@@ -41,7 +41,7 @@ public class WorldScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Setup();
+        //Setup();
     }
 
     public void Setup() {
@@ -108,7 +108,7 @@ public class WorldScript : MonoBehaviour
     void OrcaCreation()
     {
         OrcaGroupDispertionInit();
-        for (int i = 0; i < sliderOrca.value; i++)
+        for (int i = 0; i < nbOrcaGroup; i++)
         {
             Vector3 randomPos = new Vector3(Random.Range(0, 1000), 5, Random.Range(0, 1000));
 
