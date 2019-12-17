@@ -8,16 +8,11 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-<<<<<<< HEAD
-  - component: {fileID: 4215939117255745641}
-  - component: {fileID: 9221316520609568774}
-=======
   - component: {fileID: 5547784438958147907}
   - component: {fileID: 5547784438958147908}
   - component: {fileID: 5547784438958147909}
   - component: {fileID: 5547784438958147910}
   - component: {fileID: 5547784438958147911}
->>>>>>> a119c2f87952819925c9a56c87007921b37d9ac4
   m_Layer: 0
   m_Name: WhaleObject
   m_TagString: WhaleTAG
